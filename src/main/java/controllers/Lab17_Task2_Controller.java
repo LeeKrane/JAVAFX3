@@ -22,7 +22,7 @@ public class Lab17_Task2_Controller implements Initializable {
 				if (i % 2 == j % 2)
 					pane.add(new Rectangle(64, 64, Color.WHITESMOKE), i, j);
 				else
-					pane.add(new Rectangle(64, 64, Color.DIMGREY), i, j);
+					pane.add(new Rectangle(64, 64, Color.valueOf("#303030")), i, j);
 			}
 		}
 		pane.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> changeColorOfField((int)(event.getX() / 64), (int)(event.getY() / 64)));
@@ -41,7 +41,7 @@ public class Lab17_Task2_Controller implements Initializable {
 		if (column % 2 == row % 2) {
 			if (rectangle.getFill().equals(Color.WHITESMOKE)) rectangle.setFill(Color.INDIANRED);
 			else rectangle.setFill(Color.WHITESMOKE);
-		} else if (rectangle.getFill().equals(Color.DIMGREY)) rectangle.setFill(Color.INDIANRED);
-		else rectangle.setFill(Color.DIMGREY);
+		} else if (rectangle.getFill().equals(Color.valueOf("#303030"))) rectangle.setFill(Color.INDIANRED);
+		else rectangle.setFill(Color.valueOf("#303030"));
 	}
 }
