@@ -42,9 +42,9 @@ public class Lab16_Task1_Controller implements Initializable {
         if (text1.getText().isEmpty() || text2.getText().isEmpty())
             output.appendText("Both TextFields must be filled.");
         else if (variant1.isSelected())
-            output.appendText(text1.getText() + text2.getText());
+            output.appendText("Result: " + text1.getText() + text2.getText());
         else
-            output.appendText(text2.getText() + text1.getText());
+            output.appendText("Result: " + text2.getText() + text1.getText());
     }
     
     private void clear () {

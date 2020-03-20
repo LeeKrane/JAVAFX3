@@ -47,22 +47,26 @@ public class Lab18_Task2_Controller implements Initializable {
 	}
 	
 	private void insertSelection (boolean insertRight) {
-		if (insertRight && singleSelectionRadioButton.isSelected())
-			// insert multiple into right list view
-			insertBinary(leftListView.getItems(), rightListView.getItems(), leftListView.getSelectionModel().getSelectedItem());
-		else if (!insertRight && singleSelectionRadioButton.isSelected())
-			// insert multiple into left list view
-			insertBinary(rightListView.getItems(), leftListView.getItems(), rightListView.getSelectionModel().getSelectedItem());
-		else if (insertRight && multipleSelectionRadioButton.isSelected()) {
-			// insert single into right list view
-			rightListView.getItems().addAll(leftListView.getSelectionModel().getSelectedItems());
-			leftListView.getItems().removeAll(leftListView.getSelectionModel().getSelectedItems());
-			Collections.sort(rightListView.getItems());
+		if (insertRight) {
+			if (singleSelectionRadioButton.isSelected() && leftListView.getSelectionModel().getSelectedItem() != null)
+				// insert multiple into right list view
+				insertBinary(leftListView.getItems(), rightListView.getItems(), leftListView.getSelectionModel().getSelectedItem());
+			else if (leftListView.getSelectionModel().getSelectedItems().size() > 0) {
+				// insert single into right list view
+				rightListView.getItems().addAll(leftListView.getSelectionModel().getSelectedItems());
+				leftListView.getItems().removeAll(leftListView.getSelectionModel().getSelectedItems());
+				Collections.sort(rightListView.getItems());
+			}
 		} else {
-			// insert single into left list view
-			leftListView.getItems().addAll(rightListView.getSelectionModel().getSelectedItems());
-			rightListView.getItems().removeAll(rightListView.getSelectionModel().getSelectedItems());
-			Collections.sort(leftListView.getItems());
+			if (singleSelectionRadioButton.isSelected() && rightListView.getSelectionModel().getSelectedItem() != null)
+				// insert multiple into left list view
+				insertBinary(rightListView.getItems(), leftListView.getItems(), rightListView.getSelectionModel().getSelectedItem());
+			else if (rightListView.getSelectionModel().getSelectedItems().size() > 0) {
+				// insert single into left list view
+				leftListView.getItems().addAll(rightListView.getSelectionModel().getSelectedItems());
+				rightListView.getItems().removeAll(rightListView.getSelectionModel().getSelectedItems());
+				Collections.sort(leftListView.getItems());
+			}
 		}
 	}
 	

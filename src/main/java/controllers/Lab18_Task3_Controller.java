@@ -1,5 +1,6 @@
 package controllers;
 
+import domain.LogEntry;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,7 +13,6 @@ import javafx.scene.control.RadioButton;
 
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class Lab18_Task3_Controller implements Initializable {
@@ -54,18 +54,3 @@ public class Lab18_Task3_Controller implements Initializable {
 	}
 }
 
-class LogEntry {
-	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss");
-	private final String description;
-	private final LocalDateTime timestamp;
-	
-	LogEntry (String description, LocalDateTime timestamp) {
-		this.description = description;
-		this.timestamp = timestamp;
-	}
-	
-	@Override
-	public String toString () {
-		return timestamp.format(formatter) + ": " + description;
-	}
-}

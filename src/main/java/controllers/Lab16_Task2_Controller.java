@@ -31,17 +31,17 @@ public class Lab16_Task2_Controller implements Initializable {
 	
 	@Override
 	public void initialize (URL location, ResourceBundle resources) {
-		statusBar.setVisible(false);
-		
+		//statusBar.setVisible(false);
+		statusText.setVisible(false);
 		swapButton.setOnAction(e -> swap());
-		
 		clearButton.setOnAction(e -> clear());
 	}
 	
 	private void clear () {
 		textField1.clear();
 		textField2.clear();
-		statusBar.setVisible(false);
+		//statusBar.setVisible(false);
+		statusText.setVisible(false);
 	}
 	
 	private void swap () {
@@ -53,6 +53,7 @@ public class Lab16_Task2_Controller implements Initializable {
 			textField2.setText(text1);
 			statusText.setText("Swapped.");
 		}
-		statusBar.setVisible(true);
+		//statusBar.setVisible(true);
+		statusText.setVisible(true);
 	}
 }

@@ -5,8 +5,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
 import java.util.Collections;
@@ -36,10 +34,7 @@ public class Lab18_Task1_Controller implements Initializable {
 	
 	@Override
 	public void initialize (URL location, ResourceBundle resources) {
-		textField.setOnKeyPressed(event -> {
-			if (event.getCode() == KeyCode.ENTER)
-				add();
-		});
+		textField.setOnAction(event -> add());
 		addButton.setOnAction(event -> add());
 		clearButton.setOnAction(event -> listView.getItems().clear());
 		deleteButton.setOnAction(event -> listView.getItems().remove(listView.getSelectionModel().getSelectedItem()));
