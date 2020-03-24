@@ -8,17 +8,14 @@ import java.util.*;
 public class Dictionary {
 	private Map<Integer, Set<String>> wordsGroupedByLength;
 	private Map<Integer, Set<String>> wordsGroupedByDistinctCharCount;
-	int lines;
 	
 	public Dictionary (String filename) {
 		try {
-			lines = 0;
 			wordsGroupedByLength = new HashMap<>();
 			wordsGroupedByDistinctCharCount = new HashMap<>();
 			
 			Files.lines(Paths.get(filename)).skip(1).filter(s -> !s.contains(" ") && !s.contains("\t"))
 					.forEach(s -> {
-						lines++;
 						s = s.split("/")[0];
 						addLineToMaps(s, (int) s.toUpperCase().chars().distinct().count());
 					});
@@ -28,51 +25,54 @@ public class Dictionary {
 	}
 	
 	public Set<String> getPermutations (String word) {
-		int[] chars = word.toUpperCase().chars().toArray();
+		if (word.isBlank() || !wordsGroupedByLength.containsKey(word.length()))
+			return new HashSet<>();
 		
 		Set<String> ret = new TreeSet<>(wordsGroupedByLength.get(word.length()));
-		ret.removeIf(str -> !equalContent(chars, str.toUpperCase().chars().toArray()));
+		ret.removeIf(str -> !sameLettersWatchCount(word.toUpperCase().chars().toArray(), str.toUpperCase().chars().toArray()));
 		
 		return ret;
 	}
 	
-	private boolean equalContent (int[] word, int[] check) {
+	private boolean sameLettersWatchCount (int[] word, int[] check) {
 		if (word.length != check.length)
 			return false;
 		
 		for (int i = 0; i < word.length; i++) {
-			System.out.println(getOccurrences(word[i], word));
 			if (getOccurrences(word[i], word) != getOccurrences(word[i], check))
 				return false;
 		}
 		return true;
 	}
 	
-	private int getOccurrences (int i, int[] arr) {
+	private int getOccurrences (int occurrence, int[] check) {
 		int count = 0;
-		for (int j = 0; j < arr.length; j++) {
-			if (arr[j] == i)
+		for (int index = 0; index < check.length; index++) {
+			if (check[index] == occurrence)
 				count++;
 		}
 		return count;
 	}
 	
 	public Set<String> getWordsWithSameLetters (String word) {
+		if (word.isBlank() || !wordsGroupedByDistinctCharCount.containsKey((int) word.toUpperCase().chars().distinct().count()))
+			return new HashSet<>();
+		
 		int[] arrayDistinctChars = word.toUpperCase().chars().distinct().toArray();
 		
 		Set<String> ret = new TreeSet<>(wordsGroupedByDistinctCharCount.get((int) word.toUpperCase().chars().distinct().count()));
-		ret.removeIf(str -> !equalLetters(arrayDistinctChars, str.toUpperCase().chars().distinct().toArray()));
+		ret.removeIf(str -> !sameLettersIgnoreCount(arrayDistinctChars, str.toUpperCase().chars().distinct().toArray()));
 		
 		return ret;
 	}
 	
-	private boolean equalLetters (int[] word, int[] check) {
-		for (int i : check) {
-			if (!Arrays.toString(word).contains(i + ""))
+	private boolean sameLettersIgnoreCount (int[] word, int[] check) {
+		for (int ch : check) {
+			if (!Arrays.toString(word).contains(ch + ""))
 				return false;
 		}
-		for (int i : word) {
-			if (!Arrays.toString(check).contains(i + ""))
+		for (int ch : word) {
+			if (!Arrays.toString(check).contains(ch + ""))
 				return false;
 		}
 		return true;
@@ -97,8 +97,8 @@ public class Dictionary {
 	public static void main (String[] args) {
 		Dictionary dictionary = new Dictionary("src/main/resources/assets/de-DE1.dic");
 		
-		System.out.println(dictionary.lines);
 		System.out.println(dictionary.getPermutations("esi"));
 		System.out.println(dictionary.getWordsWithSameLetters("esi"));
+		System.out.println(dictionary.wordsGroupedByLength.get(8).contains("Änderung"));
 	}
 }
