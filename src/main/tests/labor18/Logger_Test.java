@@ -1,6 +1,6 @@
 package labor18;
 
-import domain.LogEntry;
+import domain.Lab18_LogEntry;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
@@ -26,7 +26,7 @@ public class Logger_Test {
     public static final String PATH_TO_FXML = "/layouts/Lab18_Logger.fxml";
     private Button button;
     private CheckBox checkBox;
-    private ListView<LogEntry> listView;
+    private ListView<Lab18_LogEntry> listView;
     private RadioButton[] rbOptions;
 
     @BeforeAll
@@ -34,13 +34,13 @@ public class Logger_Test {
         Thread.setDefaultUncaughtExceptionHandler((t, error) -> fail(error));
     }
 
-    private static LogEntry[] createMockEntries() {
+    private static Lab18_LogEntry[] createMockEntries() {
         return IntStream.range(0, 3)
                 .mapToObj(i -> {
-                    LogEntry entry = mock(LogEntry.class);
+                    Lab18_LogEntry entry = mock(Lab18_LogEntry.class);
                     when(entry.toString()).thenReturn("Mock Entry " + i);
                     return entry;
-                }).toArray(LogEntry[]::new);
+                }).toArray(Lab18_LogEntry[]::new);
     }
 
     @Start
