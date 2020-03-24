@@ -29,12 +29,12 @@
             <Insets />
          </GridPane.margin>
       </Button>
-      <RadioButton mnemonicParsing="false" text="Option 1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+      <RadioButton fx:id="option1" mnemonicParsing="false" text="Option 1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
          <toggleGroup>
             <ToggleGroup fx:id="opt" />
          </toggleGroup></RadioButton>
-      <RadioButton mnemonicParsing="false" text="Option 2" toggleGroup="$opt" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-      <RadioButton mnemonicParsing="false" text="Option 3" toggleGroup="$opt" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+      <RadioButton fx:id="option2" mnemonicParsing="false" text="Option 2" toggleGroup="$opt" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+      <RadioButton fx:id="option3" mnemonicParsing="false" text="Option 3" toggleGroup="$opt" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
       <CheckBox fx:id="checkBox" mnemonicParsing="false" text="CheckBox" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
       <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowSpan="6" />
    </children>
