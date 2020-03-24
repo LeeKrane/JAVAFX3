@@ -8,6 +8,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -47,10 +48,13 @@ public class NumberList_Controller implements Initializable {
 	}
 	
 	private void insertSelection (ListView<Integer> sourceListView, ListView<Integer> targetListView) {
-		if (singleSelectionRadioButton.isSelected() && sourceListView.getSelectionModel().getSelectedItem() != null)
+		if (singleSelectionRadioButton.isSelected() && sourceListView.getSelectionModel().getSelectedItem() != null) {
 			// insert multiple into right list view
-			insertBinary(sourceListView.getItems(), targetListView.getItems(), sourceListView.getSelectionModel().getSelectedItem());
-		else if (sourceListView.getSelectionModel().getSelectedItems().size() > 0) {
+			int insert = sourceListView.getSelectionModel().getSelectedItem();
+			int index = -Arrays.binarySearch(targetListView.getItems().toArray(), insert);
+			targetListView.getItems().add(index - 1, insert);
+			sourceListView.getItems().remove(Integer.valueOf(insert));
+		} else if (sourceListView.getSelectionModel().getSelectedItems().size() > 0) {
 			// insert single into right list view
 			targetListView.getItems().addAll(sourceListView.getSelectionModel().getSelectedItems());
 			sourceListView.getItems().removeAll(sourceListView.getSelectionModel().getSelectedItems());
