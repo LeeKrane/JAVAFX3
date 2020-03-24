@@ -17,6 +17,8 @@ public class Dictionary {
 			Files.lines(Paths.get(filename)).skip(1).filter(s -> !s.contains(" ") && !s.contains("\t"))
 					.forEach(s -> {
 						s = s.split("/")[0];
+						if (s.contains("ungs") && s.indexOf("ungs") == s.length() - 4)
+							s = s.replace("ungs", "ung");
 						addLineToMaps(s, (int) s.toUpperCase().chars().distinct().count());
 					});
 		} catch (IOException e) {
@@ -28,18 +30,18 @@ public class Dictionary {
 		if (word.isBlank() || !wordsGroupedByLength.containsKey(word.length()))
 			return new HashSet<>();
 		
-		Set<String> ret = new TreeSet<>(wordsGroupedByLength.get(word.length()));
-		ret.removeIf(str -> !sameLettersWatchCount(word.toUpperCase().chars().toArray(), str.toUpperCase().chars().toArray()));
+		Set<String> permutations = new TreeSet<>(wordsGroupedByLength.get(word.length()));
+		permutations.removeIf(str -> !sameLettersWatchCount(word.toUpperCase().chars().toArray(), str.toUpperCase().chars().toArray()));
 		
-		return ret;
+		return permutations;
 	}
 	
 	private boolean sameLettersWatchCount (int[] word, int[] check) {
 		if (word.length != check.length)
 			return false;
 		
-		for (int i = 0; i < word.length; i++) {
-			if (getOccurrences(word[i], word) != getOccurrences(word[i], check))
+		for (int ascii : word) {
+			if (getOccurrences(ascii, word) != getOccurrences(ascii, check))
 				return false;
 		}
 		return true;
@@ -47,8 +49,8 @@ public class Dictionary {
 	
 	private int getOccurrences (int occurrence, int[] check) {
 		int count = 0;
-		for (int index = 0; index < check.length; index++) {
-			if (check[index] == occurrence)
+		for (int ascii : check) {
+			if (ascii == occurrence)
 				count++;
 		}
 		return count;
