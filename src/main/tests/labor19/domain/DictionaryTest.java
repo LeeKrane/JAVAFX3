@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,29 +20,23 @@ class DictionaryTest {
 
     @Test
     void getPermutations_word_returnsAllPermutations() {
-        TreeSet<String> expected = new TreeSet<>(Set.of("Eis", "eis", "sei", "sie"));
-
         Set<String> actual = dic.getPermutations("esi");
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).containsExactly("Eis", "eis", "sei", "sie");
     }
 
     @Test
     void getPermutations_wordHadSlashInLine_returnsAllPermutations() {
-        TreeSet<String> expected = new TreeSet<>(Set.of("Äbte", "äbte"));
-
         Set<String> actual = dic.getPermutations("Äbte");
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).containsExactly("Äbte", "äbte");
     }
 
     @Test
     void getPermutations_wordEndsWithUng_returnsAllPermutations() {
-        TreeSet<String> expected = new TreeSet<>(Set.of("Änderung", "änderung"));
+        Set<String> actual = dic.getPermutations("Abschottung");
 
-        Set<String> actual = dic.getPermutations("Änderung");
-
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).containsExactly("Abschottung", "abschottung");
     }
 
     @Test
@@ -65,9 +58,10 @@ class DictionaryTest {
 
     @Test
     void getPermutations_unprintable_returnsEmptyList() {
-        Character[] unprintable = IntStream.rangeClosed(0, 32)
+        StringBuilder unprintable = IntStream.rangeClosed(0, 32)
                 .mapToObj(i -> (char) i)
-                .toArray(Character[]::new);
+                .collect(StringBuilder::new,
+                        StringBuilder::appendCodePoint, StringBuilder::append);
 
         Set<String> actual = dic.getPermutations(unprintable.toString());
 
@@ -76,11 +70,9 @@ class DictionaryTest {
 
     @Test
     void getWordsWithSameLetters_word_returnsAllWordsWithSameLetters() {
-        TreeSet<String> expected = new TreeSet<>(Set.of("Eies", "Eis", "eies", "eis", "sei", "sie"));
-
         Set<String> actual = dic.getWordsWithSameLetters("esi");
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).containsExactly("Eies", "Eis", "eies", "eis", "sei", "sie");
     }
 
     @Test
