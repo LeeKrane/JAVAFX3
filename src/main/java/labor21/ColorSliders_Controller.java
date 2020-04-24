@@ -115,12 +115,12 @@ public class ColorSliders_Controller implements Initializable {
 				else if (string.chars().allMatch(Character::isDigit)) {
 					int ret = Integer.parseInt(string);
 					if (ret < 0 || ret > 255) {
-						wrongColorAlert.show();
+						wrongColorAlert.showAndWait();
 						return 0;
 					}
 					return ret;
 				} else {
-					notANumberAlert.show();
+					notANumberAlert.showAndWait();
 					Platform.runLater(tf::clear);
 					return 0;
 				}
