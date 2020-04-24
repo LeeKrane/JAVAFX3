@@ -57,6 +57,7 @@ public class ColorSliders_Controller implements Initializable {
 		initializeColorBinding(cbRed, tfRed, sliderRed);
 		initializeColorBinding(cbGreen, tfGreen, sliderGreen);
 		initializeColorBinding(cbBlue, tfBlue, sliderBlue);
+		
 		cbGreyscale.setOnAction(event -> handleGreyscaleBindings());
 		sliderRed.valueProperty().addListener(observable -> updateLabel());
 		sliderGreen.valueProperty().addListener(observable -> updateLabel());
@@ -81,6 +82,7 @@ public class ColorSliders_Controller implements Initializable {
 			sliderRed.valueProperty().bindBidirectional(sliderGreen.valueProperty());
 			sliderRed.setValue(avg);
 			
+			// I assume the following three if-statements are optional, but I like it this way.
 			if (!cbRed.isSelected())
 				cbRed.setSelected(true);
 			if (!cbGreen.isSelected())
@@ -96,12 +98,14 @@ public class ColorSliders_Controller implements Initializable {
 	private void initializeColorBinding (CheckBox cb, TextField tf, ScrollBar slider) {
 		cb.disableProperty().bind(cbGreyscale.selectedProperty());
 		cb.setOnAction(event -> updateLabel());
+		
 		slider.visibleProperty().bind(cb.selectedProperty());
+		
 		tf.visibleProperty().bind(cb.selectedProperty());
 		tf.textProperty().bindBidirectional(slider.valueProperty(), new StringConverter<>() {
 			@Override
 			public String toString (Number object) {
-				return String.format("%.0f", object);
+				return String.format("%d", object.intValue());
 			}
 			
 			@Override
