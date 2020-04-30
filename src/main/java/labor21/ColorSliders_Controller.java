@@ -116,6 +116,7 @@ public class ColorSliders_Controller implements Initializable {
 					int ret = Integer.parseInt(string);
 					if (ret < 0 || ret > 255) {
 						wrongColorAlert.showAndWait();
+						Platform.runLater(tf::clear);
 						return 0;
 					}
 					return ret;
