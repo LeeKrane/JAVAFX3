@@ -1,4 +1,4 @@
-package labor22;
+package labor23;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -6,11 +6,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class Means_Application extends Application {
+public class Bundesländer_Application extends Application {
 	@Override
 	public void start (Stage primaryStage) throws Exception {
-		Parent root = FXMLLoader.load(getClass().getResource("/layouts/Lab22_Means.fxml"));
-		primaryStage.setTitle("Means");
+		Parent root = FXMLLoader.load(getClass().getResource("/layouts/Lab23_BundeslandList.fxml"));
+		primaryStage.setTitle("Bundesländer");
 		primaryStage.setScene(new Scene(root));
 		primaryStage.show();
 	}
