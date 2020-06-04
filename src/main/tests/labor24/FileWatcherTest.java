@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -84,8 +83,8 @@ class FileWatcherTest {
         FileWatcher watcher = new FileWatcher(path, 10);
 
         new Thread(watcher).start();
-        Writer writer = Files.newBufferedWriter(path).append("someContent");
-        writer.close(); // Without closing/flushing the Stream the changes won't be accepted, which is why I use a writer to close the Stream.
+        // Without closing/flushing the BufferedWriter the changes won't be accepted, which is why I added a flush().
+        Files.newBufferedWriter(path).append("someContent").flush();
 
         Thread.sleep(15);
         assertTrue(output.toString().contains(path + " watched"));
