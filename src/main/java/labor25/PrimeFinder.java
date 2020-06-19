@@ -10,14 +10,16 @@ public class PrimeFinder implements Runnable {
 	private Collection<Integer> primes = new ArrayList<>();
 	private PrimeChecker[] primeCheckers;
 	private Thread[] threads;
+	private int delay;
 	
-	public PrimeFinder (int start, int end) {
+	public PrimeFinder (int delay, int start, int end) {
+		this.delay = delay;
 		this.start = start;
 		this.end = end;
 	}
 	
 	public static void main (String[] args) {
-		PrimeFinder finder = new PrimeFinder(2, 25);
+		PrimeFinder finder = new PrimeFinder(10, 2, 25);
 		finder.run();
 	}
 	
@@ -68,7 +70,7 @@ public class PrimeFinder implements Runnable {
 
 class PrimeChecker implements Runnable {
 	private final int checkPrime;
-	private PrimeFinder primeFinder;
+	private final PrimeFinder primeFinder;
 	
 	public PrimeChecker (int checkPrime, PrimeFinder primeFinder) {
 		this.checkPrime = checkPrime;
@@ -87,9 +89,5 @@ class PrimeChecker implements Runnable {
 						.filter(n -> n % 2 != 0)
 						.noneMatch(n -> (checkPrime % n == 0))))
 			primeFinder.addPrime(checkPrime);
-	}
-	
-	int getCheckPrime () {
-		return checkPrime;
 	}
 }
