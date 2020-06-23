@@ -2,8 +2,8 @@ package labor25.piCalculator;
 
 public class PartialSumThread implements Runnable {
     private double sum;
-    private int min;
-    private int max;
+    private final int min;
+    private final int max;
 
     public PartialSumThread (int min, int max) {
         if (min < 0)
@@ -15,7 +15,7 @@ public class PartialSumThread implements Runnable {
 
     @Override
     public void run() {
-        for (int i = min; i <= max; i++)
+        for (int i = min; i < max; i++)
             sum += Math.pow(-1.0, i) / (2.0 * i + 1.0);
     }
 

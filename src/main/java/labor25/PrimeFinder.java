@@ -1,7 +1,6 @@
 package labor25;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -10,8 +9,7 @@ import java.util.stream.Stream;
 public class PrimeFinder implements Runnable {
 	private int start;
 	private int end;
-	private List<Long> primes = new ArrayList<>();
-	private List<PrimeChecker> primeCheckers;
+	private final List<Long> primes = new ArrayList<>();
 	private List<Thread> threads;
 	final int delay;
 	
@@ -29,47 +27,19 @@ public class PrimeFinder implements Runnable {
 		delay = 0;
 	}
 	
-	public static void main (String[] args) {
-		PrimeFinder finder = new PrimeFinder(10, 2, 25);
-		finder.run();
-	}
-	
-	@Override
-	public void run () {
+	void findPrimes () {
 		int n = end - start;
-		primeCheckers = new ArrayList<>();
 		threads = new ArrayList<>();
 		
 		for (int i = 0, j = start; i < n; i++, j++) {
-			primeCheckers.add(new PrimeChecker(j, this));
-			Thread t = new Thread(primeCheckers.get(i));
+			Thread t = new Thread(new PrimeChecker(j, this));
 			threads.add(t);
 			t.start();
 		}
-		
-		do {
-			System.out.println("Active Checkers: " + countRunningCheckers());
-			Collections.sort(primes);
-			System.out.println(primes);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				System.err.println(e);
-			}
-		} while (countRunningCheckers() > 0);
 	}
 	
-	void findPrimes () {
-		run();
-	}
-	
-	synchronized int countRunningCheckers () { // TODO: fix method to fit test
-		int activeCheckers = 0;
-		for (Thread thread : threads) {
-			if (thread.isAlive())
-				activeCheckers++;
-		}
-		return activeCheckers;
+	synchronized int countRunningCheckers () {
+		return (int) threads.stream().filter(Thread::isAlive).count();
 	}
 	
 	Stream<Long> getPrimes () {
@@ -78,6 +48,20 @@ public class PrimeFinder implements Runnable {
 	
 	synchronized void addPrime (long prime) {
 		primes.add(prime);
+	}
+	
+	@Override
+	public void run () {
+		do {
+			System.out.println("Active Checkers: " + countRunningCheckers());
+			Collections.sort(primes);
+			System.out.println(primes);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		} while (countRunningCheckers() > 0);
 	}
 }
 
@@ -97,20 +81,19 @@ class PrimeChecker implements Runnable {
 	}
 	
 	public boolean isPrimeWithDelay () {
-		boolean ret = checkPrime == 2
+		return checkPrime == 2
 				||
 				(checkPrime > 2
 						&&
 						(checkPrime % 2) != 0
 						&&
 						IntStream.rangeClosed(3, (int) Math.sqrt(checkPrime))
-								.filter(n -> n % 2 != 0)
+								.filter(n -> {
+									try {
+										Thread.sleep(primeFinder.delay);
+									} catch (InterruptedException ignored) {}
+									return n % 2 != 0;
+								})
 								.noneMatch(n -> (checkPrime % n == 0)));
-		try {
-			Thread.sleep(primeFinder.delay);
-		} catch (InterruptedException e) {
-			System.err.println(e);
-		}
-		return ret;
 	}
 }

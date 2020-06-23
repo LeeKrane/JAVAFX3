@@ -7,15 +7,16 @@ public class PiCalculator {
         
         PartialSumThread[] partialSums = new PartialSumThread[threadCnt];
         Thread[] threads = new Thread[threadCnt];
-        double remainingRange = limit;
-        // TODO: fix ranges
-        for (int i = 0, min = 0, max = limit / threadCnt;
-             i < threadCnt;
-             i++, remainingRange = limit - max, min = max + 1, max += Math.round(remainingRange / (threadCnt - i))) {
-            partialSums[i] = new PartialSumThread(min, max);
-            threads[i] = new Thread(partialSums[i]);
-            threads[i].start();
-            System.out.format("Thread-%d: [%5d, %5d] => %5d\n", i, min, max, max - min + 1);
+        int remainingRange = ++limit;
+        int range, min, max;
+    
+        for (int i = 0; i < threadCnt; i++) {
+            range = (int) Math.ceil((double) remainingRange / (threadCnt - i));
+            min = limit - remainingRange;
+            max = min + range - 1;
+            System.out.format("Thread-%d: [%5d, %5d] => %5d\n", i, min, max, range);
+            (threads[i] = new Thread((partialSums[i] = new PartialSumThread(min, max + 1)))).start();
+            remainingRange -= range;
         }
         
         double pi = 0.0;
