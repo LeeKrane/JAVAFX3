@@ -2,20 +2,31 @@ package labor25;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class PrimeFinder implements Runnable {
 	private int start;
 	private int end;
-	private Collection<Integer> primes = new ArrayList<>();
-	private PrimeChecker[] primeCheckers;
-	private Thread[] threads;
-	private int delay;
+	private List<Long> primes = new ArrayList<>();
+	private List<PrimeChecker> primeCheckers;
+	private List<Thread> threads;
+	final int delay;
 	
-	public PrimeFinder (int delay, int start, int end) {
+	PrimeFinder (int delay, int start, int end) {
 		this.delay = delay;
 		this.start = start;
 		this.end = end;
+	}
+	
+	public PrimeFinder (int delay) {
+		this.delay = delay;
+	}
+	
+	public PrimeFinder () {
+		delay = 0;
 	}
 	
 	public static void main (String[] args) {
@@ -26,17 +37,19 @@ public class PrimeFinder implements Runnable {
 	@Override
 	public void run () {
 		int n = end - start;
-		primeCheckers = new PrimeChecker[n];
-		threads = new Thread[n];
+		primeCheckers = new ArrayList<>();
+		threads = new ArrayList<>();
 		
 		for (int i = 0, j = start; i < n; i++, j++) {
-			primeCheckers[i] = new PrimeChecker(j, this);
-			threads[i] = new Thread(primeCheckers[i]);
-			threads[i].start();
+			primeCheckers.add(new PrimeChecker(j, this));
+			Thread t = new Thread(primeCheckers.get(i));
+			threads.add(t);
+			t.start();
 		}
 		
 		do {
 			System.out.println("Active Checkers: " + countRunningCheckers());
+			Collections.sort(primes);
 			System.out.println(primes);
 			try {
 				Thread.sleep(1000);
@@ -50,44 +63,54 @@ public class PrimeFinder implements Runnable {
 		run();
 	}
 	
-	int countRunningCheckers () {
+	synchronized int countRunningCheckers () { // TODO: fix method to fit test
 		int activeCheckers = 0;
-		for (int i = 0; i < threads.length; i++) {
-			if (threads[i].isAlive())
+		for (Thread thread : threads) {
+			if (thread.isAlive())
 				activeCheckers++;
 		}
 		return activeCheckers;
 	}
 	
-	Collection<Integer> getPrimes () {
-		return primes;
+	Stream<Long> getPrimes () {
+		return primes.stream();
 	}
 	
-	synchronized void addPrime (int prime) {
+	synchronized void addPrime (long prime) {
 		primes.add(prime);
 	}
 }
 
 class PrimeChecker implements Runnable {
-	private final int checkPrime;
+	private final long checkPrime;
 	private final PrimeFinder primeFinder;
 	
-	public PrimeChecker (int checkPrime, PrimeFinder primeFinder) {
+	public PrimeChecker (long checkPrime, PrimeFinder primeFinder) {
 		this.checkPrime = checkPrime;
 		this.primeFinder = primeFinder;
 	}
 	
 	@Override
 	public void run () {
-		if (checkPrime == 2
-			||
-				(checkPrime > 2
-				&&
-				(checkPrime % 2) != 0
-				&&
-				IntStream.rangeClosed(3, (int) Math.sqrt(checkPrime))
-						.filter(n -> n % 2 != 0)
-						.noneMatch(n -> (checkPrime % n == 0))))
+		if (isPrimeWithDelay())
 			primeFinder.addPrime(checkPrime);
+	}
+	
+	public boolean isPrimeWithDelay () {
+		boolean ret = checkPrime == 2
+				||
+				(checkPrime > 2
+						&&
+						(checkPrime % 2) != 0
+						&&
+						IntStream.rangeClosed(3, (int) Math.sqrt(checkPrime))
+								.filter(n -> n % 2 != 0)
+								.noneMatch(n -> (checkPrime % n == 0)));
+		try {
+			Thread.sleep(primeFinder.delay);
+		} catch (InterruptedException e) {
+			System.err.println(e);
+		}
+		return ret;
 	}
 }

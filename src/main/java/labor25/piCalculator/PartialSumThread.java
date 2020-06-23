@@ -16,7 +16,7 @@ public class PartialSumThread implements Runnable {
     @Override
     public void run() {
         for (int i = min; i <= max; i++)
-            sum += Math.pow(-1, i) / (2 * i + 1);
+            sum += Math.pow(-1.0, i) / (2.0 * i + 1.0);
     }
 
     public double getSum() {

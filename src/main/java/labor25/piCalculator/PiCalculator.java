@@ -8,7 +8,7 @@ public class PiCalculator {
         PartialSumThread[] partialSums = new PartialSumThread[threadCnt];
         Thread[] threads = new Thread[threadCnt];
         double remainingRange = limit;
-    // TODO: fix ranges
+        // TODO: fix ranges
         for (int i = 0, min = 0, max = limit / threadCnt;
              i < threadCnt;
              i++, remainingRange = limit - max, min = max + 1, max += Math.round(remainingRange / (threadCnt - i))) {
@@ -19,7 +19,7 @@ public class PiCalculator {
         }
         
         double pi = 0.0;
-    
+        
         for (int i = 0; i < threadCnt; i++) {
             if (threads[i].isAlive())
                 threads[i].join();
@@ -27,7 +27,7 @@ public class PiCalculator {
         }
         
         pi *= 4;
-    
+        
         System.out.println("pi = " + pi);
         return pi;
     }
